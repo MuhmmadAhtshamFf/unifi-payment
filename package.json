@@ -1,0 +1,27 @@
+{
+  "name": "unifi-payment",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "nodemon index.js"
+  },
+  "keywords": [
+    "payment",
+    "gateway",
+    "stripe",
+    "razorpay",
+    "paypal",
+    "authorizenet"
+  ],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "authorizenet": "^1.0.8",
+    "express": "^4.19.2",
+    "paypal-rest-sdk": "^1.8.1",
+    "razorpay": "^2.9.4",
+    "stripe": "^16.8.0"
+  }
+}
