@@ -15,7 +15,7 @@
     "paypal",
     "authorizenet"
   ],
-  "author": "",
+  "author": "myuhammad ahtsham",
   "license": "ISC",
   "dependencies": {
     "authorizenet": "^1.0.8",

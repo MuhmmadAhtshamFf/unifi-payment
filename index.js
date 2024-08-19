@@ -28,7 +28,7 @@ class UnifiPayment {
     }
   }
 
-  async createPayment(amount, currency) {
+  async createPayment(amount, currency, returnUrl, cancelUrl) {
     try {
       if (!amount) {
         return new Error("amount is required");
