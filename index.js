@@ -53,4 +53,3 @@ class UnifiPayment {
   }
 }
 export default UnifiPayment;
-
