@@ -1,3 +1,7 @@
 .git
 node_modules
 *.log
+test/
+*.unify.test
+babel.config.json
+jest.config.js

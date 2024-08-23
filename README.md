@@ -1,8 +1,28 @@
 ﻿
+
 # 🛠️ UnifiPayment Library
 
 **UnifiPayment** is a unified and easy-to-use multiple payment gateway library that integrates Stripe, Razorpay, PayPal, and Authorize.Net into your Node.js applications effortlessly. Whether you
 Your README looks great! It’s well-organized and provides clear instructions for using the **UnifiPayment** library. Here’s a refined version with a few adjustments for clarity and consistency:
+
+----------
+
+# 📚 Table of Contents
+
+1.  [🌟 Features](#-features)
+2.  [🚀 Getting Started](#-getting-started)
+    -   [Installation](#installation)
+    -   [Supported Payment Gateways](#supported-payment-gateways)
+3.  [📚 API Reference](#-api-reference)
+    -   [`UnifiPayment(type, config)`](#unifipaymenttype-config)
+    -   [`createPayment(amount, currency, returnUrl, cancelUrl)`](#createpaymentamount-currency-returnurl-cancelurl)
+4.  [🛠️ Example Implementations](#-example-implementations)
+    -   [Stripe Payment](#stripe-payment)
+    -   [Razorpay Payment](#razorpay-payment)
+    -   [PayPal Payment](#paypal-payment)
+    -   [Authorize.Net Payment](#authorize-net-payment)
+5.  [💻 Contributing](#-contributing)
+6.  [🔧 License](#-license)
 
 ----------
 
@@ -44,18 +64,24 @@ npm i unifi-payment
  keySecret: 'your-razorpay-key-secret' }`
  
     -   **PayPal**: `{ clientId: 'your-paypal-client-id', clientSecret: 'your-paypal-client-secret' }`
-    - 
+   
     -   **Authorize.Net**: `{ apiLoginId: 'your-authorize-net-login-id', transactionKey: 'your-authorize-net-transaction-key' }`
  
 
 ### `createPayment(data)`
 
--   **data**: `object` - Contains payment details:
-    -   **amount**: Amount to be charged in the smallest unit of the currency.
-    -   **currency**: Currency code (e.g., `USD`, `EUR`, `INR`).
-    - **description**: `string` - (Optional) A description for the payment.
-     - **returnUrl**: `string` - (Required for PayPal) The URL to which         the customer is redirected after payment.
-      - **cancelUrl**: `string` - (Required for PayPal) The URL to which the customer is redirected if the payment is canceled.
+**data**: `object` - Contains payment details:
+
+-   **amount**: Amount to be charged in the smallest unit of the currency.
+-   **currency**: Currency code (e.g., `USD`, `EUR`, `INR`).
+-   **description**: `string` - (Optional) A description for the payment.
+-   **returnUrl**: `string` - (Required for PayPal) The URL to which the customer is redirected after payment.
+-   **cancelUrl**: `string` - (Required for PayPal) The URL to which the customer is redirected if the payment is canceled.
+-   **environment**: `string` - (Required for PayPal)
+    -   **Type**: `string`
+    -   **Values**:
+        -   **`sandbox`**: Use this mode for testing. It allows you to simulate payments without processing real transactions. Ideal for development and testing purposes.
+        -   **`production`**: Use this mode for live transactions. Once testing is complete, switch to this mode to process real payments.
 
  
 ## **🛠️ Example Implementations**
@@ -106,9 +132,10 @@ const payment = new UnifiPayment('paypal', {
 payment.createPayment({
   amount: '50.00',
   currency: 'USD',
-  description: "description"
+  description: "description",
   returnUrl: 'https://your-site.com/success',
   cancelUrl: 'https://your-site.com/cancel',
+  environment:"production" //// Either 'sandbox' or 'production' default is "sandbox"
 })
   .then(result => console.log(result))
   .catch(err => console.error(err));

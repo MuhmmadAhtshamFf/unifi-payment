@@ -1,10 +1,7 @@
-const express = require("express");
-const StripeGateway = require("./lib/stripe");
-const RazorpayGateway = require("./lib/razorpay");
-const PayPalGateway = require("./lib/Paypal");
-const app = express();
-const port = 3000;
-
+import PayPalGateway from "./lib/Paypal.js";
+import AuthorizeNetGateway from "./lib/authorizenet.js";
+import RazorpayGateway from "./lib/razorpay.js";
+import StripeGateway from "./lib/stripe.js";
 class UnifiPayment {
   constructor(type, config) {
     switch (type) {
@@ -28,7 +25,7 @@ class UnifiPayment {
     }
   }
 
-  async createPayment(amount, currency, returnUrl, cancelUrl) {
+  async createPayment(amount, currency, returnUrl, cancelUrl, environment) {
     try {
       if (!amount) {
         return new Error("amount is required");
@@ -44,7 +41,8 @@ class UnifiPayment {
           amount,
           currency,
           returnUrl,
-          cancelUrl
+          cancelUrl,
+          environment
         );
       } else {
         throw new Error("Unsupported payment gateway type");
@@ -54,7 +52,5 @@ class UnifiPayment {
     }
   }
 }
+export default UnifiPayment;
 
-app.listen(port, () => {
-  console.log(`listening at http://localhost:${port}`);
-});
