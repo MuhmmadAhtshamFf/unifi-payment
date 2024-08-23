@@ -88,14 +88,17 @@ npm i unifi-payment
  ## Stripe Payment:
  
  ```javascript 
+ ---------------------------------------------
 ** Stripe
 ---------------------------------------------
+import UnifiPayment from 'unifi-payment';
+
 const payment = new UnifiPayment('stripe', { apiKey: 'your-stripe-api-key' });
 
 payment.createPayment({
   amount: 1000,
   currency: 'usd',
-  description: 'Payment for order #1234',
+  description: "description",
 })
   .then(result => console.log(result))
   .catch(err => console.error(err))
@@ -103,8 +106,11 @@ payment.createPayment({
   
   ## Razorpay Payment:
 ```javascript
+-----------------------------------------------
 ** Razorpay
 -----------------------------------------------
+import UnifiPayment from 'unifi-payment';
+
 const payment = new UnifiPayment('razorpay', {
   keyId: 'your-razorpay-key-id',
   keySecret: 'your-razorpay-key-secret',
@@ -122,8 +128,11 @@ payment.createPayment({
 
 ## Paypal Payment:
 ```javascript
+--------------------------------------------
  ** Paypal
 ---------------------------------------------
+import UnifiPayment from 'unifi-payment';
+
 const payment = new UnifiPayment('paypal', {
   clientId: 'your-paypal-client-id',
   clientSecret: 'your-paypal-client-secret',
@@ -143,8 +152,11 @@ payment.createPayment({
   
   ## Authorize.Net Payment:
   ```javascript
+  --------------------------------------------------
 ** Authorize.Net
 --------------------------------------------------
+import UnifiPayment from 'unifi-payment';
+
 const payment = new UnifiPayment('authorizenet', {
   apiLoginId: 'your-authorize-net-login-id',
   transactionKey: 'your-authorize-net-transaction-key',
