@@ -1,6 +1,6 @@
 .git
 node_modules
-/dist
+dist/
 *.log
 test/
 *.unify.test
