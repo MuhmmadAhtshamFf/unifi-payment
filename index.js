@@ -49,6 +49,8 @@ class Unipay {
       return await this.gateway[provider].CreateCheckoutSession({
         amount,
         currency,
+        returnUrl,
+        cancelUrl,
       });
     });
     return Promise.all(session);
