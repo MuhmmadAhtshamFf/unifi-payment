@@ -1,56 +1,98 @@
 import PayPalGateway from "./lib/Paypal.js";
-import AuthorizeNetGateway from "./lib/authorizenet.js";
-import RazorpayGateway from "./lib/razorpay.js";
 import StripeGateway from "./lib/stripe.js";
-class UnifiPayment {
-  constructor(type, config) {
-    switch (type) {
-      case "stripe":
-        this.gateway = new StripeGateway(config.apiKey);
-        break;
-      case "razorpay":
-        this.gateway = new RazorpayGateway(config.keyId, config.keySecret);
-        break;
-      case "paypal":
-        this.gateway = new PayPalGateway(config.clientId, config.clientSecret);
-        break;
-      case "authorizenet":
-        this.gateway = new AuthorizeNetGateway(
-          config.apiLoginId,
-          config.apiTransactionKey
-        );
-        break;
-      default:
-        throw new Error("Unsupported payment gateway type");
-    }
+import RazorpayGateway from "./lib/razorpay.js";
+import AuthorizenetGateway from "./lib/Authorizenet.js";
+
+class Unipay {
+  constructor(config) {
+    this.gateway = {
+      stripe: config.StripeApiKey
+        ? new StripeGateway(config.StripeApiKey)
+        : null,
+
+      paypal:
+        config.PaypalclientId && config.PaypalClientSecret
+          ? new PayPalGateway(
+              config.PaypalclientId,
+              config.PaypalClientSecret,
+              config.PaypalMode,
+              config.environment
+            )
+          : null,
+
+      razorpay:
+        config.RazorpayKeyId && config.RazorpayKey_secret
+          ? new RazorpayGateway(config.RazorpayKeyId, config.RazorpayKey_secret)
+          : null,
+
+      authorizenet:
+        config.apiLoginId && config.ApiTransactionKey
+          ? new AuthorizenetGateway(config.ApiTransactionKey, config.apiLoginId)
+          : null,
+    };
+  }
+  async createCheckoutSession({
+    amount,
+    currency,
+    returnUrl,
+    cancelUrl,
+    provider = [],
+  }) {
+    const session = provider.map(async (provider) => {
+      if (this.gateway[provider] === null) {
+        throw new Error(`Provide the Apikey of ${provider}`);
+      }
+      if (!this.gateway[provider]) {
+        throw new Error(`Provider ${provider} is not supported`);
+      }
+
+      return await this.gateway[provider].CreateCheckoutSession({
+        amount,
+        currency,
+      });
+    });
+    return Promise.all(session);
+  }
+  async capturePayment(id) {
+    const session = provider.map(async (provider) => {
+      if (this.gateway[provider] === null) {
+        throw new Error(`Provide the Apikey of ${provider}`);
+      }
+      if (!this.gateway[provider]) {
+        throw new Error(`Provider ${provider} is not supported`);
+      }
+      if (!this.gateway[provider].capturePayment) {
+        throw new Error(`Provider ${provider} does not support capturePayment`);
+      }
+      if (!id) {
+        throw new Error("id is required");
+      }
+      return await this.gateway[provider].capturePayment(id);
+    });
+    return Promise.all(session);
   }
 
-  async createPayment(amount, currency, returnUrl, cancelUrl, environment) {
-    try {
-      if (!amount) {
-        return new Error("amount is required");
+  async createPaymentIntent({ amount, currency, description = "" }) {
+    const session = provider.map(async (provider) => {
+      if (this.gateway[provider] === null) {
+        throw new Error(`Provide the Apikey of ${provider}`);
       }
-      if (!currency) {
-        return new Error("currency is required");
+      if (!this.gateway[provider]) {
+        throw new Error(`Provider ${provider} is not supported`);
       }
-
-      if (this.gateway.createPaymentIntent) {
-        return await this.gateway.createPaymentIntent(amount, currency);
-      } else if (this.gateway.createPayment) {
-        return await this.gateway.createPayment(
-          amount,
-          currency,
-          returnUrl,
-          cancelUrl,
-          environment
+      if (!this.gateway[provider].createPaymentIntent) {
+        throw new Error(
+          `Provider ${provider} does not support createPaymentIntent`
         );
-      } else {
-        throw new Error("Unsupported payment gateway type");
       }
-    } catch (error) {
-      throw new Error(`Payment processing failed: ${error.message}`);
-    }
+      return await this.gateway[provider].createPaymentIntent({
+        amount,
+        currency,
+        description,
+      });
+    });
+    return Promise.all(session);
   }
 }
-export default UnifiPayment;
 
+export default Unipay;
